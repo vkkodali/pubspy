@@ -30,9 +30,20 @@ jobs:
           QUERY='"memorial sloan kettering"[affiliation] AND '$DATE1':'$DATE2'[publication date]'
           echo "QUERY=$QUERY" >> $GITHUB_ENV
 
-      - name: Run PubMed fetch script
+
+      - name: Run PubMed fetch script and capture STDOUT
         run: |
-          python fetch_pubmed.py --query "$QUERY" --output results.tsv
+          python fetch_pubmed.py --query "$QUERY" --output results.tsv | tee pubmed_stdout.txt
+
+      - name: Set email body from script STDOUT
+        id: set_email_body
+        run: |
+          BODY=$(cat pubmed_stdout.txt)
+          # Escape percent signs for YAML
+          BODY_ESCAPED="${BODY//%/%%}"
+          echo "EMAIL_BODY<<EOF" >> $GITHUB_ENV
+          echo "$BODY_ESCAPED" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Send results by email
         uses: dawidd6/action-send-mail@v3
@@ -44,6 +55,6 @@ jobs:
           subject: "Weekly PubMed Results"
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_FROM }}
-          body: "Find attached the latest PubMed results."
+          body: ${{ env.EMAIL_BODY }}
           attachments: results.tsv
           secure: true
