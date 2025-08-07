@@ -1,0 +1,49 @@
+name: Weekly PubMed Fetch and Email
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'  # Every Sunday at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  fetch-and-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests tqdm
+
+      - name: Set query for last 7 days
+        id: set_query
+        run: |
+          DATE2=$(date +%Y/%m/%d)
+          DATE1=$(date -d "$DATE2 - 7 days" +%Y/%m/%d)
+          QUERY='"memorial sloan kettering"[affiliation] AND '$DATE1':'$DATE2'[publication date]'
+          echo "QUERY=$QUERY" >> $GITHUB_ENV
+
+      - name: Run PubMed fetch script
+        run: |
+          python fetch_pubmed.py --query "$QUERY" --output results.tsv
+
+      - name: Send results by email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Weekly PubMed Results"
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          body: "Find attached the latest PubMed results."
+          attachments: results.tsv
+          secure: true
