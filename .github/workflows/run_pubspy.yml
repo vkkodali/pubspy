@@ -1,3 +1,12 @@
+      - name: Set debug mode (optional)
+        id: set_debug
+        run: |
+          # Set DEBUG_EMAIL to true to use EMAIL_TEST
+          if [ "${{ github.event.inputs.debug }}" = "true" ]; then
+            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TEST }}" >> $GITHUB_ENV
+          else
+            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TO }}" >> $GITHUB_ENV
+          fi
 name: Monthly PubMed Fetch and Email
 
 
@@ -10,6 +19,10 @@ on:
         description: 'Custom PubMed query string (optional)'
         required: false
         default: ''
+      debug:
+        description: 'Send email to EMAIL_TEST (true/false)'
+        required: false
+        default: 'false'
 
 jobs:
   fetch-and-email:
@@ -65,7 +78,7 @@ jobs:
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
           subject: "PubSpy Results"
-          to: ${{ secrets.EMAIL_TO }}
+          to: ${{ env.EMAIL_RECIPIENT }}
           from: ${{ secrets.EMAIL_FROM }}
           body: ${{ env.EMAIL_BODY }}
           attachments: results.tsv
