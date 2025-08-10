@@ -3,7 +3,7 @@ name: Weekly PubMed Fetch and Email
 
 on:
   schedule:
-    - cron: '0 3 * * 0'  # Every Sunday at 03:00 UTC
+    - cron: '0 3 1 * *'  # First day of every month at 03:00 UTC
   workflow_dispatch:
     inputs:
       query:
@@ -35,8 +35,8 @@ jobs:
             QUERY="${{ github.event.inputs.query }}"
           else
             DATE2=$(date +%Y/%m/%d)
-            DATE1=$(date -d "$DATE2 - 7 days" +%Y/%m/%d)
-            QUERY='"memorial sloan kettering"[affiliation] AND '$DATE1':'$DATE2'[publication date]'
+            DATE1=$(date -d "$DATE2 - 90 days" +%Y/%m/%d)
+            QUERY="\"memorial sloan kettering\"[affiliation] AND $DATE1:$DATE2[publication date]"
           fi
           echo "QUERY=$QUERY" >> $GITHUB_ENV
 
