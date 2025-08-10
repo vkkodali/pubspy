@@ -50,10 +50,12 @@ jobs:
         id: set_email_body
         run: |
           BODY=$(cat pubmed_stdout.txt)
+          # Prepend the query string to the email body
+          EMAIL_BODY="Base query used: $QUERY\n\n$BODY"
           # Escape percent signs for YAML
-          BODY_ESCAPED="${BODY//%/%%}"
+          EMAIL_BODY_ESCAPED="${EMAIL_BODY//%/%%}"
           echo "EMAIL_BODY<<EOF" >> $GITHUB_ENV
-          echo "$BODY_ESCAPED" >> $GITHUB_ENV
+          echo "$EMAIL_BODY_ESCAPED" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Send results by email
