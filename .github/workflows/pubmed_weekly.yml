@@ -1,4 +1,4 @@
-name: Weekly PubMed Fetch and Email
+name: Monthly PubMed Fetch and Email
 
 
 on:
@@ -28,14 +28,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests tqdm
 
-      - name: Set query for last 90 days or use manual input
+      - name: Set query for last 60 days or use manual input
         id: set_query
         run: |
           if [ -n "${{ github.event.inputs.query }}" ]; then
             QUERY="${{ github.event.inputs.query }}"
           else
             DATE2=$(date +%Y/%m/%d)
-            DATE1=$(date -d "$DATE2 - 90 days" +%Y/%m/%d)
+            DATE1=$(date -d "$DATE2 - 60 days" +%Y/%m/%d)
             QUERY="\"memorial sloan kettering\"[affiliation] AND $DATE1:$DATE2[publication date]"
           fi
             echo "QUERY=$QUERY" >> $GITHUB_ENV
@@ -63,7 +63,7 @@ jobs:
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
           password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "Weekly PubMed Results"
+          subject: "PubSpy Results"
           to: ${{ secrets.EMAIL_TO }}
           from: ${{ secrets.EMAIL_FROM }}
           body: ${{ env.EMAIL_BODY }}
