@@ -1,12 +1,3 @@
-      - name: Set debug mode (optional)
-        id: set_debug
-        run: |
-          # Set DEBUG_EMAIL to true to use EMAIL_TEST
-          if [ "${{ github.event.inputs.debug }}" = "true" ]; then
-            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TEST }}" >> $GITHUB_ENV
-          else
-            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TO }}" >> $GITHUB_ENV
-          fi
 name: Monthly PubMed Fetch and Email
 
 
@@ -41,6 +32,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests tqdm
 
+      - name: Set debug mode (optional)
+        id: set_debug
+        run: |
+          # Set DEBUG_EMAIL to true to use EMAIL_TEST
+          if [ "${{ github.event.inputs.debug }}" = "true" ]; then
+            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TEST }}" >> $GITHUB_ENV
+          else
+            echo "EMAIL_RECIPIENT=${{ secrets.EMAIL_TO }}" >> $GITHUB_ENV
+          fi
+
       - name: Set query for last 60 days or use manual input
         id: set_query
         run: |
@@ -51,8 +52,7 @@ jobs:
             DATE1=$(date -d "$DATE2 - 60 days" +%Y/%m/%d)
             QUERY="\"memorial sloan kettering\"[affiliation] AND $DATE1:$DATE2[publication date]"
           fi
-            echo "QUERY=$QUERY" >> $GITHUB_ENV
-            echo "QUERY=$QUERY"
+          echo "QUERY=$QUERY" >> $GITHUB_ENV
 
 
       - name: Run PubMed fetch script and capture STDOUT
