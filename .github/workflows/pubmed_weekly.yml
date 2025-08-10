@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests tqdm
 
-      - name: Set query for last 7 days or use manual input
+      - name: Set query for last 90 days or use manual input
         id: set_query
         run: |
           if [ -n "${{ github.event.inputs.query }}" ]; then
@@ -38,7 +38,8 @@ jobs:
             DATE1=$(date -d "$DATE2 - 90 days" +%Y/%m/%d)
             QUERY="\"memorial sloan kettering\"[affiliation] AND $DATE1:$DATE2[publication date]"
           fi
-          echo "QUERY=$QUERY" >> $GITHUB_ENV
+            echo "QUERY=$QUERY" >> $GITHUB_ENV
+            echo "QUERY=$QUERY"
 
 
       - name: Run PubMed fetch script and capture STDOUT
