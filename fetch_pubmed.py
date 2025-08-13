@@ -4,8 +4,8 @@ import sys
 import requests
 import xml.etree.ElementTree as ET
 from typing import Optional
+from collections import defaultdict
 import time
-from tqdm import tqdm
 
 """
 fetch_pubmed.py
@@ -26,14 +26,18 @@ References:
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 
-def read_institute_names(filepath: str) -> set[str]:
-    """Read names of institutes from a file, one per line, and return as a set."""
-    institutes = set()
+def read_institute_names(filepath: str) -> dict:
+    """Read tab-delimited institute and country names from a file, ignoring comment lines."""
+    institutes = dict()
     with open(filepath, encoding="utf-8") as f:
         for line in f:
-            name = line.strip().replace('"', '')
-            if name:
-                institutes.add(name)
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            parts = line.split('\t')
+            assert len(parts) == 2
+            institute, country = parts[0].strip().replace('"', ''), parts[1].strip()
+            institutes[institute] = country
     return institutes
 
 def fetch_pubmed_xml(pmids: list[str], email: Optional[str] = None) -> str:
@@ -50,14 +54,29 @@ def fetch_pubmed_xml(pmids: list[str], email: Optional[str] = None) -> str:
     return resp.text
 
 
-def parse_and_output_publications(all_pmids, pmid_list, email: Optional[str], output_file):
+def parse_and_output_publications(all_pmids, all_institutes, email: Optional[str], output_file):
     """Fetch XML for PMIDs, parse and print/write title, journal, pubdate, pmid, url, institutes."""
+
     CHUNK_SIZE = 250
     def chunked(iterable, n=CHUNK_SIZE):
         for i in range(0, len(iterable), n):
             yield iterable[i:i + n]
+
+    def institute_affiliation_match(qry_institutes, affiliations):
+        """Return True if any institute matches the affiliation rules (country-aware)."""
+        for inst in qry_institutes:
+            country = all_institutes[inst]
+            inst_lower = inst.lower()
+            if country == "NA" and any(inst_lower in aff for aff in affiliations):
+                return True
+            elif any(inst_lower in aff and country and country.lower() in aff for aff in affiliations):
+                return True
+        return False
+
     pubs = []
-    for chunk in tqdm(list(chunked(pmid_list)), desc="Fetching XML", unit="chunk"):
+    pmid_list = list(all_pmids.keys())
+
+    for chunk in chunked(pmid_list):
         xml_data = fetch_pubmed_xml(chunk, email)
         root = ET.fromstring(xml_data)
         for article in root.findall('.//PubmedArticle'):
@@ -74,27 +93,36 @@ def parse_and_output_publications(all_pmids, pmid_list, email: Optional[str], ou
                 medline_date_elem = article.find('.//JournalIssue/PubDate/MedlineDate')
                 pubdate = medline_date_elem.text if medline_date_elem is not None else ''
             url = f"https://pubmed.gov/{pmid}"
-            institutes_str = ''
+            qry_institutes_str = ''
+            matched = False
             if pmid in all_pmids:
-                institutes_str = ';'.join(sorted(all_pmids[pmid]))
-            # Print to screen
-            print(f"Title   : {title}")
-            print(f"Journal : {journal}")
-            print(f"Date    : {pubdate}")
-            print(f"PMID    : {pmid}")
-            print(f"URL     : {url}")
-            print(f"Institutes: {institutes_str}")
-            print("-" * 60)
-            # Write to file
-            pubs.append({
-                'title': title,
-                'journal': journal,
-                'pubdate': pubdate,
-                'pmid': pmid,
-                'url': url,
-                'institutes': institutes_str
-            })
+                qry_institutes = all_pmids[pmid]
+                qry_institutes_str = ';'.join(sorted(qry_institutes))
+                affiliations = [aff.text.lower() for aff in article.findall('.//AffiliationInfo/Affiliation') if aff.text]
+                matched = institute_affiliation_match(qry_institutes, affiliations)
+            if matched:
+                # Print to screen
+                print(f"Title   : {title}")
+                print(f"Journal : {journal}")
+                print(f"Date    : {pubdate}")
+                print(f"PMID    : {pmid}")
+                print(f"URL     : {url}")
+                print(f"Institutes: {qry_institutes_str}")
+                print("-" * 60)
+                # Write to file
+                pubs.append({
+                    'title': title,
+                    'journal': journal,
+                    'pubdate': pubdate,
+                    'pmid': pmid,
+                    'url': url,
+                    'institutes': qry_institutes_str
+                })
         time.sleep(0.25)
+
+    # Print total count of publications to screen 
+    print(f"\nNum. publications to review after dropping false-positives: {len(pubs)}\n")
+
     if output_file:
         with open(output_file, "a", encoding="utf-8") as f:
             for pub in pubs:
@@ -132,33 +160,30 @@ def main():
     parser.add_argument("--email", type=str, default=None, help="Contact email for NCBI API compliance.")
     parser.add_argument("--output", type=str, default=None, help="Output file to save XML (default: stdout).")
     args = parser.parse_args()
-    CHUNK_SIZE = 250
-    def chunked(iterable, n=CHUNK_SIZE):
-        for i in range(0, len(iterable), n):
-            yield iterable[i:i + n]
 
-    # Load institutes from file (user already has this function and file)
-    institutes = read_institute_names("Section_1286_list.txt")
-    print(f"Total institutes loaded: {len(institutes)}")
+    # Load institutes from file 
+    all_institutes = read_institute_names("Section_1286_list.txt")
+    print(f"Num. institutes being checked: {len(all_institutes)}")
     try:
         # Write header to output file if requested
         if args.output:
             with open(args.output, "w", encoding="utf-8") as f:
                 f.write("Title\tJournal\tDate\tPMID\tPubMed_URL\tInstitutes\n")
         # Collect all PMIDs from all institutes
-        from collections import defaultdict
         all_pmids = defaultdict(set)  # pmid -> set of institute names
-        for institute_name in tqdm(sorted(institutes), desc="Institutes", unit="inst"):
-            search_query = f"{args.query} AND {institute_name}[affiliation]"
+        for institute in all_institutes.keys():
+            search_query = f"{args.query} AND {institute}[affiliation]"
             pmids, total_count = search_pubmed(search_query, args.retmax, args.email)
-            print(f"Total results for {institute_name}: {total_count}")
+            if total_count > 0:
+                print(f"Found {total_count} hits for {institute}")
             for pmid in pmids:
-                all_pmids[pmid].add(institute_name)
-            time.sleep(0.25)
-        print(f"\nTotal unique PMIDs collected: {len(all_pmids)}\n")
+                all_pmids[pmid].add(institute)
+            time.sleep(0.25) # do not overload NCBI 
+
+        print(f"\nTotal number of PMIDs returned for all institutes: {len(all_pmids)}\n")
+
         # Chunk and process all PMIDs
-        all_pmids_list = list(all_pmids.keys())
-        parse_and_output_publications(all_pmids, all_pmids_list, args.email, args.output)
+        parse_and_output_publications(all_pmids, all_institutes, args.email, args.output)
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
