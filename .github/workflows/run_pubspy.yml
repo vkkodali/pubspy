@@ -57,7 +57,7 @@ jobs:
 
       - name: Run PubMed fetch script and capture STDOUT
         run: |
-          python fetch_pubmed.py --query "$QUERY" --output results.tsv | tee pubmed_stdout.txt
+          python fetch_pubmed.py --query "$QUERY" --output results.tsv --email "${{ secrets.EMAIL_FROM }}" | tee pubmed_stdout.txt
 
       - name: Set email body from script STDOUT
         id: set_email_body
