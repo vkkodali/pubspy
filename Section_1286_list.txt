@@ -1,21 +1,21 @@
 #Institute_Name	Country
-Academy of Military Medical Sciences	NA
-Academy of Military Medical Sciences, Field Blood Transfusion Institution	NA
-Academy of Military Medical Sciences, Institute of Basic Medicine	NA
-Academy of Military Medical Sciences, Institute of Bioengineering	NA
-Academy of Military Medical Sciences, Institute of Disease Control and Prevention	NA
-Disease Control and Prevention Institute	NA
-Academy of Military Medical Sciences, Institute of Health Service and Medical Information	NA
-Academy of Military Medical Sciences, Institute of Hygiene and Environmental Medicine	NA
-Academy of Military Medical Sciences, Institute of Medical Equipment	NA
-Academy of Military Medical Sciences, Institute of Microbiology and Epidemiology	NA
-Institute of Microbial Epidemiology	NA
-Academy of Military Medical Sciences, Institute of Radiation and Radiation 	NA
-Institute of Radiation and Radiation Medicine	NA
-Institute of Electromagnetic and Particle Radiation Medicine	NA
-Academy of Military Medical Sciences, Institute of Toxicology and Pharmacology 	NA
-Institute of Toxicology and Drugs	NA
-Academy of Military Medical Sciences, Military Veterinary Research Institute	NA
+Academy of Military Medical Sciences	China
+Academy of Military Medical Sciences, Field Blood Transfusion Institution	China
+Academy of Military Medical Sciences, Institute of Basic Medicine	China
+Academy of Military Medical Sciences, Institute of Bioengineering	China
+Academy of Military Medical Sciences, Institute of Disease Control and Prevention	China
+Disease Control and Prevention Institute	China
+Academy of Military Medical Sciences, Institute of Health Service and Medical Information	China
+Academy of Military Medical Sciences, Institute of Hygiene and Environmental Medicine	China
+Academy of Military Medical Sciences, Institute of Medical Equipment	China
+Academy of Military Medical Sciences, Institute of Microbiology and Epidemiology	China
+Institute of Microbial Epidemiology	China
+Academy of Military Medical Sciences, Institute of Radiation and Radiation 	China
+Institute of Radiation and Radiation Medicine	China
+Institute of Electromagnetic and Particle Radiation Medicine	China
+Academy of Military Medical Sciences, Institute of Toxicology and Pharmacology 	China
+Institute of Toxicology and Drugs	China
+Academy of Military Medical Sciences, Military Veterinary Research Institute	China
 Air Force Aviation University	NA
 Air Force Command College	NA
 Air Force Communication NCO Academy	NA
@@ -148,33 +148,33 @@ Federal State Budgetary Institute A.V. Zhirmunskiy National Scientific Research 
 Federal State Budgetary Institution of Science Institute of Bioorganic Chemistry named after Academicians M.M. Shemyakin and Yu.A. Ovchinnikov, Russian Academy of Sciences	NA
 Federal State Budgetary Institution of Science Federal Research Center Pushchino Scientific Center for Biology, Russian Academy of Sciences	NA
 Federal State Budgetary Institution of Science Institute of Molecular and Cell Biology, Siberian Branch of the Russian Academy of Sciences	NA
-Federal State Budgetary Institution of Science P.I.K.A. Valiev RAS of the Ministry of Science and Higher Education of Russia 	NA
-FTIAN IM K.A.Valiev RAS	NA
-FTI RAS	NA
-FTIAN	NA
-Federal State Budgetary Scientific Institution Research and Production Complex Technology Center 	NA
-Federalnoe Gosudarstvennoe Byudzhetnoe Nauchnoe Uchrezhdenie Nauchno-Proizvodstvenny Kompleks Tekhnologicheskiy Tsentr - NPK Technological Center	NA
-NPKTS	NA
-Scientific Manufacturing Complex Technological Center	NA
-SMC Technological Center	NA
-Federal State Institution Federal Scientific Center Scientific Research Institute for System Analysis of the Russian Academy of Sciences 	NA
-Federalnoe Gosudarstvennoe Uchrezhdenie Federalnyy Nauchnyy Tsentr Nauchno-Issledovatelskiy Institut Sistemnykh Issledovaniy Rossiyskoy Akademii Nauk	NA
-FGU FNTS NIISI RAN	NA
-FSI FSC SRISA RAS	NA
-Scientific Research Institute of System Analysis, Russian Academy of Sciences	NA
-Federal State Unitary Enterprise All-Russian Research Institute of Physical, Technical and Radio Engineering Measurements 	NA
-VNIIFTRI	NA
-Federal State Unitary Enterprise Central Scientific Research Institute of Chemistry and Mechanics 	NA
-CNIIHM	NA
-Federalnoe Gosudarstvennoe Unitarnoe Predpriyatie Tsentralny Nauchno-Issledovatelski Institut Khimii I Mekhaniki	NA
-FGUP CNIIXM	NA
-FGUP TSNIIKHM	NA
-FSUE CNIIHM	NA
-FSUE TSNIIKHM	NA
-GNTS RF FGUP TSNIIKHM	NA
-State Research Center of the Russian Federation FGUP Central Scientific Research Institute of Chemistry and Mechanics	NA
-Tsentralny Naucho-Issledovatelsky Institut Khimii I Mekhaniki, FGUP	NA
-TSNIIKHM	NA
+Federal State Budgetary Institution of Science P.I.K.A. Valiev RAS of the Ministry of Science and Higher Education of Russia 	Russia
+FTIAN IM K.A.Valiev RAS	Russia
+FTI RAS	Russia
+FTIAN	Russia
+Federal State Budgetary Scientific Institution Research and Production Complex Technology Center 	Russia
+Federalnoe Gosudarstvennoe Byudzhetnoe Nauchnoe Uchrezhdenie Nauchno-Proizvodstvenny Kompleks Tekhnologicheskiy Tsentr - NPK Technological Center	Russia
+NPKTS	Russia
+Scientific Manufacturing Complex Technological Center	Russia
+SMC Technological Center	Russia
+Federal State Institution Federal Scientific Center Scientific Research Institute for System Analysis of the Russian Academy of Sciences 	Russia
+Federalnoe Gosudarstvennoe Uchrezhdenie Federalnyy Nauchnyy Tsentr Nauchno-Issledovatelskiy Institut Sistemnykh Issledovaniy Rossiyskoy Akademii Nauk	Russia
+FGU FNTS NIISI RAN	Russia
+FSI FSC SRISA RAS	Russia
+Scientific Research Institute of System Analysis, Russian Academy of Sciences	Russia
+Federal State Unitary Enterprise All-Russian Research Institute of Physical, Technical and Radio Engineering Measurements 	Russia
+VNIIFTRI	Russia
+Federal State Unitary Enterprise Central Scientific Research Institute of Chemistry and Mechanics 	Russia
+CNIIHM	Russia
+Federalnoe Gosudarstvennoe Unitarnoe Predpriyatie Tsentralny Nauchno-Issledovatelski Institut Khimii I Mekhaniki	Russia
+FGUP CNIIXM	Russia
+FGUP TSNIIKHM	Russia
+FSUE CNIIHM	Russia
+FSUE TSNIIKHM	Russia
+GNTS RF FGUP TSNIIKHM	Russia
+State Research Center of the Russian Federation FGUP Central Scientific Research Institute of Chemistry and Mechanics	Russia
+Tsentralny Naucho-Issledovatelsky Institut Khimii I Mekhaniki, FGUP	Russia
+TSNIIKHM	Russia
 Guilin University of Electronic Technology	NA
 Harbin Engineering University	NA
 Harbin Institute of Technology	NA
